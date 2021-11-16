@@ -987,6 +987,8 @@ public class YaVersion {
   // - Assets helper block was added.
   public static final int HORIZONTALSCROLLARRANGEMENT_COMPONENT_VERSION = 2;
 
+  public static final int HORIZONTALRADIOGROUP_COMPONENT_VERSION = 1;
+
   // For IMAGE_COMPONENT_VERSION 2:
   // - The RotationAngle property was added.
   // For IMAGE_COMPONENT_VERSION 3:
@@ -1246,6 +1248,9 @@ public class YaVersion {
   // - Initial Rectangle implementation for Maps
   // For RECTANGLE_COMPONENT_VERSION 2:
   // - Added fill and stroke opacity properties
+
+  public static final int RADIOBUTTON_COMPONENT_VERSION = 1;
+
   public static final int RECTANGLE_COMPONENT_VERSION = 2;
 
   public static final int SHARING_COMPONENT_VERSION = 1;
@@ -1402,6 +1407,8 @@ public class YaVersion {
   // - Add HorizontalAlignment and VerticalAlignment dropdown blocks.
   // - Assets helper block was added.
   public static final int VERTICALARRANGEMENT_COMPONENT_VERSION = 4;
+
+  public static final int VERTICALRADIOGROUP_COMPONENT_VERSION = 1;
 
   // For VERTICALSCROLLARRANGEMENT_COMPONENT_VERSION 2:
   // - Add HorizontalAlignment and VerticalAlignment dropdown blocks.
