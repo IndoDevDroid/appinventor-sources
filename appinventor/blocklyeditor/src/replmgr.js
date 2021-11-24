@@ -292,10 +292,16 @@ Blockly.ReplMgr.pollYail = function(workspace, opt_force) {
 };
 
 Blockly.ReplMgr.resetYail = function(partial) {
-    top.ReplState.phoneState.initialized = false; // so running io stops
+    var rs = top.ReplState;
+    rs.initialized = false; // so running io stops
     if (!partial) {
         this.putYail.reset();
         top.ReplState.phoneState = { "phoneQueue" : [], "assetQueue" : []};
+    }
+    if (rs.proxy) {
+        window.removeEventListener("message", top.proxy_handler);
+        rs.proxy.close();
+        rs.proxy = undefined;
     }
 };
 
@@ -698,8 +704,6 @@ Blockly.ReplMgr.putYail = (function() {
                     return;
                 }
             }
-            var encoder = new goog.Uri.QueryData();
-            conn = goog.net.XmlHttp();
             if (work.block) {
                 // Quote blockId as a string due to non-numeric identifiers generated from
                 // Blockly's soup {@see Blockly.utils.genUid.soup_}
@@ -711,44 +715,52 @@ Blockly.ReplMgr.putYail = (function() {
                     blockid = "-1";
                 }
             }
-
-            conn.open('POST', rs.url, true);
-            conn.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var json = goog.json.parse(this.response);
-                    if (json.status != 'OK') {
-                        if (work.failure)
-                            work.failure(Blockly.Msg.REPL_ERROR_FROM_COMPANION);
-                    } else {
-                        if (work.success)
-                            work.success();
-                    }
-                    context.processRetvals(json.values);
-                    rs.seq_count += 1;
-                    if (rs.phoneState.initialized) // Only continue if we are still initialized
-                        engine.pollphone(); // And on to the next!
-                } else {
-                    if (this.readyState == 4) {
-                        console.log("putYail(poller): status = " + this.status);
-                        if (work.failure) {
-                            work.failure(Blockly.Msg.REPL_NETWORK_CONNECTION_ERROR);
-                        }
-                        var dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_NETWORK_ERROR, Blockly.Msg.REPL_NETWORK_ERROR_RESTART, Blockly.Msg.REPL_OK, false, null, 0,
-                            function() {
-                                dialog.hide();
-                                context.hardreset(context.formName);
-                            });
-                        engine.resetcompanion();
-                    }
-                }
-
-            };
+            var encoder = new goog.Uri.QueryData();
             encoder.add('mac', Blockly.ReplMgr.hmac(work.code + rs.seq_count + blockid));
             encoder.add('seq', rs.seq_count);
             encoder.add('code', work.code);
             encoder.add('blockid', blockid);
             var stuff = encoder.toString();
-            conn.send(stuff);
+            if (rs.proxy) {
+                rs.proxy.postMessage(['blocks', stuff], rs.proxy_origin);
+                rs.seq_count += 1;
+                if (rs.phoneState.initialized) // Only continue if we are still initialized
+                    engine.pollphone(); // And on to the next!
+            } else {
+                conn = goog.net.XmlHttp();
+                conn.open('POST', rs.url, true);
+                conn.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var json = goog.json.parse(this.response);
+                        if (json.status != 'OK') {
+                            if (work.failure)
+                                work.failure(Blockly.Msg.REPL_ERROR_FROM_COMPANION);
+                        } else {
+                            if (work.success)
+                                work.success();
+                        }
+                        context.processRetvals(json.values);
+                        rs.seq_count += 1;
+                        if (rs.phoneState.initialized) // Only continue if we are still initialized
+                            engine.pollphone(); // And on to the next!
+                    } else {
+                        if (this.readyState == 4) {
+                            console.log("putYail(poller): status = " + this.status);
+                            if (work.failure) {
+                                work.failure(Blockly.Msg.REPL_NETWORK_CONNECTION_ERROR);
+                            }
+                            var dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_NETWORK_ERROR, Blockly.Msg.REPL_NETWORK_ERROR_RESTART, Blockly.Msg.REPL_OK, false, null, 0,
+                                                                 function() {
+                                                                     dialog.hide();
+                                                                     context.hardreset(context.formName);
+                                                                 });
+                            engine.resetcompanion();
+                        }
+                    }
+
+                };
+                conn.send(stuff);
+            }
         },
         'doversioncheck' : function() {
             var conn = goog.net.XmlHttp();
@@ -813,20 +825,22 @@ Blockly.ReplMgr.putYail = (function() {
         "receivefromphone" : function() {
             phonereceiving = true;
             console.log("receivefromphone called.");
-            rxhr = goog.net.XmlHttp();
-            rxhr.open('POST', rs.rurl, true); // We post to avoid caching issues
-            rxhr.onreadystatechange = function() {
-                if (this.readyState != 4) return;
-                console.log("receivefromphone returned.");
-                if (this.status == 200) {
-                    var json = goog.json.parse(this.response);
-                    if (json.status == 'OK') {
-                        context.processRetvals(json.values);
+            if (!rs.proxy) {    // proxy return values are handled differently
+                rxhr = goog.net.XmlHttp();
+                rxhr.open('POST', rs.rurl, true); // We post to avoid caching issues
+                rxhr.onreadystatechange = function() {
+                    if (this.readyState != 4) return;
+                    console.log("receivefromphone returned.");
+                    if (this.status == 200) {
+                        var json = goog.json.parse(this.response);
+                        if (json.status == 'OK') {
+                            context.processRetvals(json.values);
+                        }
+                        engine.receivefromphone(); // Continue...
                     }
-                    engine.receivefromphone(); // Continue...
-                }
-            };
-            rxhr.send("IGNORED=STUFF");
+                };
+                rxhr.send("IGNORED=STUFF");
+            }
         },
         "reset" : function() {
             sentMacros = false;
@@ -1493,7 +1507,46 @@ Blockly.ReplMgr.getFromRendezvous = function() {
                 rs.extensionurl = rs.baseurl + '_extensions';
                 rs.didversioncheck = true; // We are checking it here, so don't check it later
                                            // via HTTP because we may be using webrtc and there is no
-                                           // HTTP
+                                          // HTTP
+                rs.useproxy = json.useproxy
+
+
+                if ((!json.webrtc || json.webrtc == "false") && (rs.useproxy && rs.useproxy == "true") ) {
+                    rs.proxy_ready = false;
+                    rs.proxy = window.open(rs.baseurl + "_proxy", "Bar", "popup,width=50,height=50");
+//                    rs.proxy_origin = 'http://' + json.ipaddr + ':8001'; // Version without trailing slash
+                    console.log('rs.proxy_origin = ' + rs.proxy_origin);
+
+                    // The code below sets things up so the proxy window
+                    // winds up underneath the main App Inventor window
+                    var ghost = window.open("about:blank");
+                    ghost.focus();
+                    ghost.close();
+                    // End of pop-under hack
+
+                    // So we can close it from Ode when the main window is closed
+                    top.proxy = rs.proxy;
+
+                    // We define the handler function here and store it at top
+                    // level so we can use it later to remove the event handler
+                    // when we close the proxy window
+                    top.proxy_handler = function(event) {
+                        var json = event.data;
+                        if (json.status == 'OK') {
+                            context.processRetvals(json.values);
+                        } else if (json.status == 'EXTENSIONS_LOADED') {
+                            // Only used in proxy context to indicate extensions
+                            // are completely loaded
+                            rs.state = Blockly.ReplMgr.rsState.CONNECTED;
+                            Blockly.mainWorkspace.fireChangeListener(new AI.Events.CompanionConnect());
+                        } else if (json.status == 'hello') {
+                            rs.proxy_origin = event.origin;
+                            rs.proxy_ready = true;
+                            console.log("rs.proxy: Received Hello");
+                        }
+                    };
+                    window.addEventListener("message", top.proxy_handler);
+                }
 
                 // Let's see if the Rendezvous server gave us a second level to contact
                 // as well as a list of ice servers to override our defaults
@@ -1522,11 +1575,17 @@ Blockly.ReplMgr.getFromRendezvous = function() {
                         me.putYail(); // This starts the whole negotiation process!
                         return;         // And we are done here.
                     }
+                    if (rs.proxy && !rs.proxy_ready) {
+                        // we have to wait...
+                        setTimeout(getstarted, 1000); // Try again in one second
+                        console.log("getstarted(useproxy): not ready, retrying");
+                        return;
+                    }
                     // At this point we are going to use Legacy Mode. Check to see if we
                     // are loaded over https. If we are, then Legacy Mode will fail. So
                     // shutdown the whole thing here and put up a dialog box explaining
                     // the problem.
-                    if (window.location.protocol === 'https:') {
+                    if (window.location.protocol === 'https:' && !rs.proxy) {
                       // Reset State to initial
                       rs.state = Blockly.ReplMgr.rsState.IDLE;
                       rs.connection = null;
@@ -1544,7 +1603,7 @@ Blockly.ReplMgr.getFromRendezvous = function() {
                       return;   // We're done
                     };
 
-                    rs.state = Blockly.ReplMgr.rsState.CONNECTED;
+                    rs.state = Blockly.ReplMgr.rsState.ASSET;
 
                     RefreshAssets(function() {
                         Blockly.ReplMgr.loadExtensions();
@@ -1618,10 +1677,15 @@ Blockly.ReplMgr.loadExtensions = function() {
             "\")";
         console.log("Blockly.ReplMgr.loadExtensions(webrtc): Yail = " + yailstring);
         this.putYail.putAsset(yailstring);
+    } else if (rs.proxy) {
+        var encoder = new goog.Uri.QueryData();
+        encoder.add('extensions', JSON.stringify(top.AssetManager_getExtensions()));
+        var tosend = encoder.toString();
+        rs.proxy.postMessage(['extensions', tosend], rs.proxy_origin);
     } else {
         rs.state = Blockly.ReplMgr.rsState.EXTENSIONS;
         var xmlhttp = goog.net.XmlHttp();
-        var encoder = new goog.Uri.QueryData();
+        encoder = new goog.Uri.QueryData();
         encoder.add('extensions', JSON.stringify(top.AssetManager_getExtensions()));
         xmlhttp.open('POST', rs.extensionurl, true);
         xmlhttp.onreadystatechange = function() {
@@ -1753,8 +1817,11 @@ Blockly.ReplMgr.putAsset = function(projectid, filename, blob, success, fail, fo
         this.putYail.putAsset(yail);
         return true;
     }
-    var conn = goog.net.XmlHttp();
     var arraybuf = new ArrayBuffer(blob.length);
+    var arrayview = new Uint8Array(arraybuf);
+    for (var i = 0; i < blob.length; i++) {
+        arrayview[i] = blob[i];
+    }
     var rs = top.ReplState;
     var encoder = new goog.Uri.QueryData();
     //var z = filename.split('/'); // Remove any directory components
@@ -1762,30 +1829,32 @@ Blockly.ReplMgr.putAsset = function(projectid, filename, blob, success, fail, fo
     var z = filename.slice(filename.indexOf('/') + 1, filename.length); // remove the asset directory
     encoder.add('filename', z); // keep directory structure
 
-    conn.retries = 3;
-    conn.open('PUT', rs.baseurl + '?' + encoder.toString(), true);
-    conn.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            if (success) {      // process callbacks
-                success();
-            }
-        } else if (this.readyState == 4) {
-            if (this.retries > 0) {
-                this.retries--;
-                this.open('PUT', rs.baseurl + '?' + encoder.toString(), true);
-                this.send(arraybuf);
-            }
-            if (fail) {
-                fail();
-            }
-        }
-    };
 
-    var arrayview = new Uint8Array(arraybuf);
-    for (var i = 0; i < blob.length; i++) {
-        arrayview[i] = blob[i];
+    if (rs.proxy) {
+        rs.proxy.postMessage(['asset', encoder.toString(), arraybuf], rs.proxy_origin);
+        success();              // What happens if we fail?
+    } else {
+        var conn = goog.net.XmlHttp();
+        conn.retries = 3;
+        conn.open('PUT', rs.baseurl + '?' + encoder.toString(), true);
+        conn.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (success) {      // process callbacks
+                    success();
+                }
+            } else if (this.readyState == 4) {
+                if (this.retries > 0) {
+                    this.retries--;
+                    this.open('PUT', rs.baseurl + '?' + encoder.toString(), true);
+                    this.send(arraybuf);
+                }
+                if (fail) {
+                    fail();
+                }
+            }
+        };
+        conn.send(arraybuf);
     }
-    conn.send(arraybuf);
     return true;
 };
 
