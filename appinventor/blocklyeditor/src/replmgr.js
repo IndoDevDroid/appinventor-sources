@@ -1472,6 +1472,7 @@ Blockly.ReplMgr.genCode = function() {
 // Request ipAddress information from the Rendezvous Server
 Blockly.ReplMgr.getFromRendezvous = function() {
     var me = this;
+
     var xmlhttp = goog.net.XmlHttp();
     if (top.ReplState === undefined || top.ReplState === null) {
         console.log('getFromRendezvous: replState not set yet.');
@@ -1479,7 +1480,6 @@ Blockly.ReplMgr.getFromRendezvous = function() {
     }
     var rs = top.ReplState;
     var context = this;
-    var RefreshAssets = top.AssetManager_refreshAssets; // This is where GWT puts this
     var poller = function() {                                     // So "this" is correct when called
         context.rendPoll.call(context);                           // from setTimeout
     };
@@ -1508,45 +1508,8 @@ Blockly.ReplMgr.getFromRendezvous = function() {
                 rs.didversioncheck = true; // We are checking it here, so don't check it later
                                            // via HTTP because we may be using webrtc and there is no
                                           // HTTP
-                rs.useproxy = json.useproxy
-
-
-                if ((!json.webrtc || json.webrtc == "false") && (rs.useproxy && rs.useproxy == "true") ) {
-                    rs.proxy_ready = false;
-                    rs.proxy = window.open(rs.baseurl + "_proxy", "Bar", "popup,width=50,height=50");
-//                    rs.proxy_origin = 'http://' + json.ipaddr + ':8001'; // Version without trailing slash
-                    console.log('rs.proxy_origin = ' + rs.proxy_origin);
-
-                    // The code below sets things up so the proxy window
-                    // winds up underneath the main App Inventor window
-                    var ghost = window.open("about:blank");
-                    ghost.focus();
-                    ghost.close();
-                    // End of pop-under hack
-
-                    // So we can close it from Ode when the main window is closed
-                    top.proxy = rs.proxy;
-
-                    // We define the handler function here and store it at top
-                    // level so we can use it later to remove the event handler
-                    // when we close the proxy window
-                    top.proxy_handler = function(event) {
-                        var json = event.data;
-                        if (json.status == 'OK') {
-                            context.processRetvals(json.values);
-                        } else if (json.status == 'EXTENSIONS_LOADED') {
-                            // Only used in proxy context to indicate extensions
-                            // are completely loaded
-                            rs.state = Blockly.ReplMgr.rsState.CONNECTED;
-                            Blockly.mainWorkspace.fireChangeListener(new AI.Events.CompanionConnect());
-                        } else if (json.status == 'hello') {
-                            rs.proxy_origin = event.origin;
-                            rs.proxy_ready = true;
-                            console.log("rs.proxy: Received Hello");
-                        }
-                    };
-                    window.addEventListener("message", top.proxy_handler);
-                }
+                rs.webrtc = json.webrtc;
+                rs.useproxy = json.useproxy;
 
                 // Let's see if the Rendezvous server gave us a second level to contact
                 // as well as a list of ice servers to override our defaults
@@ -1564,89 +1527,11 @@ Blockly.ReplMgr.getFromRendezvous = function() {
                   rs.iceservers = { 'iceServers' : serverlist };
                 }
 
-                // The code below really gets things going. We will
-                // either call it shortly, if the Companion version is acceptable
-                // or in the dialog response handler below if the Companion
-                // is out of date but the user chooses to continue anyway
-                var getstarted = function() {
-                    if (json.webrtc && json.webrtc == "true") { // We are the webRTC Companion
-                        top.usewebrtc = true;
-                        rs.state = me.rsState.ASSET;
-                        me.putYail(); // This starts the whole negotiation process!
-                        return;         // And we are done here.
-                    }
-                    if (rs.proxy && !rs.proxy_ready) {
-                        // we have to wait...
-                        setTimeout(getstarted, 1000); // Try again in one second
-                        console.log("getstarted(useproxy): not ready, retrying");
-                        return;
-                    }
-                    // At this point we are going to use Legacy Mode. Check to see if we
-                    // are loaded over https. If we are, then Legacy Mode will fail. So
-                    // shutdown the whole thing here and put up a dialog box explaining
-                    // the problem.
-                    if (window.location.protocol === 'https:' && !rs.proxy) {
-                      // Reset State to initial
-                      rs.state = Blockly.ReplMgr.rsState.IDLE;
-                      rs.connection = null;
-                      rs.didversioncheck = false;
-                      rs.isUSB = false;
-                      context.resetYail(false);
-                      top.BlocklyPanel_indicateDisconnect();
-                      top.ConnectProgressBar_hide();
-                      // Show dialog
-                      var dialog = new Blockly.Util.Dialog(Blockly.REPL_CONNECTION_FAILURE1,
-                                                           Blockly.Msg.REPL_NO_LEGACY, Blockly.Msg.REPL_OK,
-                                                           false, null, 0, function() {
-                                                             dialog.hide();
-                                                           });
-                      return;   // We're done
-                    };
+                rs.version = json.version;
+                rs.installer = json.installer;
 
-                    rs.state = Blockly.ReplMgr.rsState.ASSET;
+                me.rendezvousDone();
 
-                    RefreshAssets(function() {
-                        Blockly.ReplMgr.loadExtensions();
-                    });
-                    // Start the connection with the Repl itself
-                };
-                // Time to check the version of the Companion that we get from the
-                // Rendezvous server. Note: Only post 2.47 Companions provide this
-                // information. So if it isn't present we will assume it is old and
-                // say that an update is advisable (or needed)
-                var installer = json.installer;
-                if (!json.version || !Blockly.ReplMgr.acceptableVersion(json.version)) {
-                    if (top.COMPANION_UPDATE_URL1 && !rs.isUSB) {
-                        var url = top.location.origin + top.COMPANION_UPDATE_URL1;
-                        var dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_COMPANION_VERSION_CHECK,
-                                                         Blockly.Msg.REPL_COMPANION_OUT_OF_DATE2 + '<br/>' +
-                                                         Blockly.ReplMgr.makeqrcode(url),
-                                                         Blockly.Msg.REPL_OK, false,
-                                                         Blockly.Msg.REPL_NOT_NOW, 0,
-                                                         function(response) {
-                                                             dialog.hide();
-                                                             if (response == Blockly.Msg.REPL_NOT_NOW) {
-                                                                 getstarted();
-                                                             } else {
-                                                                 top.ReplState.state = Blockly.ReplMgr.rsState.IDLE;
-                                                                 top.BlocklyPanel_indicateDisconnect();
-                                                                 top.ConnectProgressBar_hide();
-                                                             }
-                                                         });
-
-                    } else {
-                        dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_COMPANION_VERSION_CHECK,
-                                                         Blockly.Msg.REPL_COMPANION_OUT_OF_DATE1 + " " +
-                                                         top.PREFERRED_COMPANION,
-                                                         Blockly.Msg.REPL_OK, false, null, 0,
-                                                         function(response) {
-                                                             dialog.hide();
-                                                             getstarted();
-                                                         });
-                    }
-                } else {
-                        getstarted();
-                }
             } catch (err) {
                 console.log("getFromRendezvous(): Error: " + err);
                 setTimeout(poller, 2000); // Queue next attempt
@@ -1654,6 +1539,160 @@ Blockly.ReplMgr.getFromRendezvous = function() {
         }
     };
     xmlhttp.send();
+};
+
+Blockly.ReplMgr.rendezvousDone = function() {
+    var me = this;
+    var rs = top.ReplState;
+    var RefreshAssets = top.AssetManager_refreshAssets; // This is where GWT puts this
+
+    var usewebrtc = rs.webrtc && rs.webrtc == "true";
+    var useproxy = rs.useproxy; // Only checked if webrtc is false
+
+    var checkversion = new Promise(function (resolve, reject) {
+        // Time to check the version of the Companion that we get from the
+        // Rendezvous server. Note: Only post 2.47 Companions provide this
+        // information. So if it isn't present we will assume it is old and
+        // say that an update is advisable (or needed)
+        if (!rs.version || !Blockly.ReplMgr.acceptableVersion(rs.version)) {
+            if (top.COMPANION_UPDATE_URL1 && !rs.isUSB) {
+                var url = top.location.origin + top.COMPANION_UPDATE_URL1;
+                var dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_COMPANION_VERSION_CHECK,
+                                                     Blockly.Msg.REPL_COMPANION_OUT_OF_DATE2 + '<br/>' +
+                                                     Blockly.ReplMgr.makeqrcode(url),
+                                                     Blockly.Msg.REPL_OK, false,
+                                                     Blockly.Msg.REPL_NOT_NOW, 0,
+                                                     function(response) {
+                                                         dialog.hide();
+                                                         if (response == Blockly.Msg.REPL_NOT_NOW) {
+                                                             resolve();
+                                                         } else {
+                                                             top.ReplState.state = Blockly.ReplMgr.rsState.IDLE;
+                                                             top.BlocklyPanel_indicateDisconnect();
+                                                             top.ConnectProgressBar_hide();
+                                                             reject();
+                                                         }
+                                                     });
+
+            } else {
+                dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_COMPANION_VERSION_CHECK,
+                                                 Blockly.Msg.REPL_COMPANION_OUT_OF_DATE1 + " " +
+                                                 top.PREFERRED_COMPANION,
+                                                 Blockly.Msg.REPL_OK, false, null, 0,
+                                                 function(response) {
+                                                     dialog.hide();
+                                                     resolve();
+                                                 });
+            }
+        } else {
+            resolve();
+        }
+    });
+    var startwebrtc = function() {
+        top.usewebrtc = true;
+        rs.state = me.rsState.ASSET;
+        me.putYail();
+    };
+    var startproxy = function() {
+        rs.proxy_ready = false;
+        var promise = new Promise(function(resolve, reject) {
+            rs.proxy = window.open(rs.baseurl + "_proxy", "Bar", "popup,width=50,height=50");
+            if (rs.proxy) {
+                rs.proxy.blur();
+                window.focus();
+                resolve();
+            } else {
+                var dialog = new Blockly.Util.Dialog(Blockly.Msg.REPL_POPUP_TITLE,
+                                                     Blockly.Msg.REPL_POPUP_MESSAGE,
+                                                     Blockly.Msg.REPL_POPUP_CONTINUE,
+                                                     false, null, 0,
+                                                     function() {
+                                                         dialog.hide();
+                                                         reject(); // Rejecting will cause a retry
+                                                     });
+            }
+        });
+        promise.then(function() {
+
+            // +--------------------------------------------------------+
+            // |  // The code below sets things up so the proxy window  |
+            // |  // winds up underneath the main App Inventor window   |
+            // |  var ghost = window.open("about:blank");               |
+            // |  if (ghost) { // If it failed, don't worry about it    |
+            // |      ghost.focus();                                    |
+            // |      ghost.close();                                    |
+            // |  }                                                     |
+            // +--------------------------------------------------------+
+
+            // So we can close it from Ode when the main window is closed
+            top.proxy = rs.proxy;
+
+            // We define the handler function here and store it at top
+            // level so we can use it later to remove the event handler
+            // when we close the proxy window
+            top.proxy_handler = function(event) {
+                var json = event.data;
+                if (json.status == 'OK') {
+                    me.processRetvals(json.values);
+                } else if (json.status == 'EXTENSIONS_LOADED') {
+                    // Only used in proxy context to indicate extensions
+                    // are completely loaded
+                    rs.state = Blockly.ReplMgr.rsState.CONNECTED;
+                    Blockly.mainWorkspace.fireChangeListener(new AI.Events.CompanionConnect());
+                } else if (json.status == 'hello') {
+                    rs.proxy_origin = event.origin;
+                    rs.proxy_ready = true;
+                    console.log("rs.proxy: Received Hello");
+                    rs.state = Blockly.ReplMgr.rsState.ASSET;
+                    RefreshAssets(function() {
+                        Blockly.ReplMgr.loadExtensions();
+                    });
+                }
+            };
+            window.addEventListener("message", top.proxy_handler);
+        }, function() {
+            startproxy();
+        });
+    };
+    var startlegacy = function() {
+        // At this point we are going to use Legacy Mode. Check to see if we
+        // are loaded over https. If we are, then Legacy Mode will fail. So
+        // shutdown the whole thing here and put up a dialog box explaining
+        // the problem.
+        if (window.location.protocol === 'https:') {
+            // Reset State to initial
+            rs.state = Blockly.ReplMgr.rsState.IDLE;
+            rs.connection = null;
+            rs.didversioncheck = false;
+            rs.isUSB = false;
+            me.resetYail(false);
+            top.BlocklyPanel_indicateDisconnect();
+            top.ConnectProgressBar_hide();
+            // Show dialog
+            var dialog = new Blockly.Util.Dialog(Blockly.REPL_CONNECTION_FAILURE1,
+                                                 Blockly.Msg.REPL_NO_LEGACY, Blockly.Msg.REPL_OK,
+                                                 false, null, 0, function() {
+                                                     dialog.hide();
+                                                 });
+            return;   // We're done
+        };
+        rs.state = Blockly.ReplMgr.rsState.ASSET;
+        RefreshAssets(function() {
+            Blockly.ReplMgr.loadExtensions();
+        });
+
+    };
+    checkversion.then(function() {
+        if (usewebrtc) {
+            startwebrtc();
+        } else if (useproxy) {
+            startproxy();
+        } else  {
+            startlegacy();
+        }
+    }, function() {
+        return;
+    });
 };
 
 Blockly.ReplMgr.resendAssetsAndExtensions = function() {
