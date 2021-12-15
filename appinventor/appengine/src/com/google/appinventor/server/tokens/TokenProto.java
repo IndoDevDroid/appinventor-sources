@@ -239,6 +239,84 @@ public final class TokenProto {
      */
     com.google.protobuf.ByteString
         getBackpackidBytes();
+
+    /**
+     * <pre>
+     * Class user is associated with
+     * </pre>
+     *
+     * <code>optional string classname = 25;</code>
+     */
+    boolean hasClassname();
+    /**
+     * <pre>
+     * Class user is associated with
+     * </pre>
+     *
+     * <code>optional string classname = 25;</code>
+     */
+    java.lang.String getClassname();
+    /**
+     * <pre>
+     * Class user is associated with
+     * </pre>
+     *
+     * <code>optional string classname = 25;</code>
+     */
+    com.google.protobuf.ByteString
+        getClassnameBytes();
+
+    /**
+     * <pre>
+     * Vendor ID for Anonymous Alexa Accounts
+     * </pre>
+     *
+     * <code>optional string vendorid = 26;</code>
+     */
+    boolean hasVendorid();
+    /**
+     * <pre>
+     * Vendor ID for Anonymous Alexa Accounts
+     * </pre>
+     *
+     * <code>optional string vendorid = 26;</code>
+     */
+    java.lang.String getVendorid();
+    /**
+     * <pre>
+     * Vendor ID for Anonymous Alexa Accounts
+     * </pre>
+     *
+     * <code>optional string vendorid = 26;</code>
+     */
+    com.google.protobuf.ByteString
+        getVendoridBytes();
+
+    /**
+     * <pre>
+     * Refresh Token for Anonymous Alexa Account
+     * </pre>
+     *
+     * <code>optional string refreshtoken = 27;</code>
+     */
+    boolean hasRefreshtoken();
+    /**
+     * <pre>
+     * Refresh Token for Anonymous Alexa Account
+     * </pre>
+     *
+     * <code>optional string refreshtoken = 27;</code>
+     */
+    java.lang.String getRefreshtoken();
+    /**
+     * <pre>
+     * Refresh Token for Anonymous Alexa Account
+     * </pre>
+     *
+     * <code>optional string refreshtoken = 27;</code>
+     */
+    com.google.protobuf.ByteString
+        getRefreshtokenBytes();
   }
   /**
    * Protobuf type {@code tokens.token}
@@ -263,6 +341,9 @@ public final class TokenProto {
       displayprojectname_ = "";
       displayaccountname_ = "";
       backpackid_ = "";
+      classname_ = "";
+      vendorid_ = "";
+      refreshtoken_ = "";
     }
 
     @java.lang.Override
@@ -357,6 +438,24 @@ public final class TokenProto {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000400;
               backpackid_ = bs;
+              break;
+            }
+            case 202: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000800;
+              classname_ = bs;
+              break;
+            }
+            case 210: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00001000;
+              vendorid_ = bs;
+              break;
+            }
+            case 218: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00002000;
+              refreshtoken_ = bs;
               break;
             }
           }
@@ -976,6 +1075,168 @@ public final class TokenProto {
       }
     }
 
+    public static final int CLASSNAME_FIELD_NUMBER = 25;
+    private volatile java.lang.Object classname_;
+    /**
+     * <pre>
+     * Class user is associated with
+     * </pre>
+     *
+     * <code>optional string classname = 25;</code>
+     */
+    public boolean hasClassname() {
+      return ((bitField0_ & 0x00000800) == 0x00000800);
+    }
+    /**
+     * <pre>
+     * Class user is associated with
+     * </pre>
+     *
+     * <code>optional string classname = 25;</code>
+     */
+    public java.lang.String getClassname() {
+      java.lang.Object ref = classname_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          classname_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Class user is associated with
+     * </pre>
+     *
+     * <code>optional string classname = 25;</code>
+     */
+    public com.google.protobuf.ByteString
+        getClassnameBytes() {
+      java.lang.Object ref = classname_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        classname_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int VENDORID_FIELD_NUMBER = 26;
+    private volatile java.lang.Object vendorid_;
+    /**
+     * <pre>
+     * Vendor ID for Anonymous Alexa Accounts
+     * </pre>
+     *
+     * <code>optional string vendorid = 26;</code>
+     */
+    public boolean hasVendorid() {
+      return ((bitField0_ & 0x00001000) == 0x00001000);
+    }
+    /**
+     * <pre>
+     * Vendor ID for Anonymous Alexa Accounts
+     * </pre>
+     *
+     * <code>optional string vendorid = 26;</code>
+     */
+    public java.lang.String getVendorid() {
+      java.lang.Object ref = vendorid_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          vendorid_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Vendor ID for Anonymous Alexa Accounts
+     * </pre>
+     *
+     * <code>optional string vendorid = 26;</code>
+     */
+    public com.google.protobuf.ByteString
+        getVendoridBytes() {
+      java.lang.Object ref = vendorid_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        vendorid_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int REFRESHTOKEN_FIELD_NUMBER = 27;
+    private volatile java.lang.Object refreshtoken_;
+    /**
+     * <pre>
+     * Refresh Token for Anonymous Alexa Account
+     * </pre>
+     *
+     * <code>optional string refreshtoken = 27;</code>
+     */
+    public boolean hasRefreshtoken() {
+      return ((bitField0_ & 0x00002000) == 0x00002000);
+    }
+    /**
+     * <pre>
+     * Refresh Token for Anonymous Alexa Account
+     * </pre>
+     *
+     * <code>optional string refreshtoken = 27;</code>
+     */
+    public java.lang.String getRefreshtoken() {
+      java.lang.Object ref = refreshtoken_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          refreshtoken_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * Refresh Token for Anonymous Alexa Account
+     * </pre>
+     *
+     * <code>optional string refreshtoken = 27;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRefreshtokenBytes() {
+      java.lang.Object ref = refreshtoken_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        refreshtoken_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1025,6 +1286,15 @@ public final class TokenProto {
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 24, backpackid_);
       }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 25, classname_);
+      }
+      if (((bitField0_ & 0x00001000) == 0x00001000)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 26, vendorid_);
+      }
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 27, refreshtoken_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1071,6 +1341,15 @@ public final class TokenProto {
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(24, backpackid_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(25, classname_);
+      }
+      if (((bitField0_ & 0x00001000) == 0x00001000)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(26, vendorid_);
+      }
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(27, refreshtoken_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1143,6 +1422,21 @@ public final class TokenProto {
         result = result && getBackpackid()
             .equals(other.getBackpackid());
       }
+      result = result && (hasClassname() == other.hasClassname());
+      if (hasClassname()) {
+        result = result && getClassname()
+            .equals(other.getClassname());
+      }
+      result = result && (hasVendorid() == other.hasVendorid());
+      if (hasVendorid()) {
+        result = result && getVendorid()
+            .equals(other.getVendorid());
+      }
+      result = result && (hasRefreshtoken() == other.hasRefreshtoken());
+      if (hasRefreshtoken()) {
+        result = result && getRefreshtoken()
+            .equals(other.getRefreshtoken());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1202,6 +1496,18 @@ public final class TokenProto {
       if (hasBackpackid()) {
         hash = (37 * hash) + BACKPACKID_FIELD_NUMBER;
         hash = (53 * hash) + getBackpackid().hashCode();
+      }
+      if (hasClassname()) {
+        hash = (37 * hash) + CLASSNAME_FIELD_NUMBER;
+        hash = (53 * hash) + getClassname().hashCode();
+      }
+      if (hasVendorid()) {
+        hash = (37 * hash) + VENDORID_FIELD_NUMBER;
+        hash = (53 * hash) + getVendorid().hashCode();
+      }
+      if (hasRefreshtoken()) {
+        hash = (37 * hash) + REFRESHTOKEN_FIELD_NUMBER;
+        hash = (53 * hash) + getRefreshtoken().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1343,6 +1649,12 @@ public final class TokenProto {
         bitField0_ = (bitField0_ & ~0x00000200);
         backpackid_ = "";
         bitField0_ = (bitField0_ & ~0x00000400);
+        classname_ = "";
+        bitField0_ = (bitField0_ & ~0x00000800);
+        vendorid_ = "";
+        bitField0_ = (bitField0_ & ~0x00001000);
+        refreshtoken_ = "";
+        bitField0_ = (bitField0_ & ~0x00002000);
         return this;
       }
 
@@ -1411,6 +1723,18 @@ public final class TokenProto {
           to_bitField0_ |= 0x00000400;
         }
         result.backpackid_ = backpackid_;
+        if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+          to_bitField0_ |= 0x00000800;
+        }
+        result.classname_ = classname_;
+        if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
+          to_bitField0_ |= 0x00001000;
+        }
+        result.vendorid_ = vendorid_;
+        if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+          to_bitField0_ |= 0x00002000;
+        }
+        result.refreshtoken_ = refreshtoken_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1494,6 +1818,21 @@ public final class TokenProto {
         if (other.hasBackpackid()) {
           bitField0_ |= 0x00000400;
           backpackid_ = other.backpackid_;
+          onChanged();
+        }
+        if (other.hasClassname()) {
+          bitField0_ |= 0x00000800;
+          classname_ = other.classname_;
+          onChanged();
+        }
+        if (other.hasVendorid()) {
+          bitField0_ |= 0x00001000;
+          vendorid_ = other.vendorid_;
+          onChanged();
+        }
+        if (other.hasRefreshtoken()) {
+          bitField0_ |= 0x00002000;
+          refreshtoken_ = other.refreshtoken_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -2298,6 +2637,306 @@ public final class TokenProto {
         onChanged();
         return this;
       }
+
+      private java.lang.Object classname_ = "";
+      /**
+       * <pre>
+       * Class user is associated with
+       * </pre>
+       *
+       * <code>optional string classname = 25;</code>
+       */
+      public boolean hasClassname() {
+        return ((bitField0_ & 0x00000800) == 0x00000800);
+      }
+      /**
+       * <pre>
+       * Class user is associated with
+       * </pre>
+       *
+       * <code>optional string classname = 25;</code>
+       */
+      public java.lang.String getClassname() {
+        java.lang.Object ref = classname_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            classname_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Class user is associated with
+       * </pre>
+       *
+       * <code>optional string classname = 25;</code>
+       */
+      public com.google.protobuf.ByteString
+          getClassnameBytes() {
+        java.lang.Object ref = classname_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          classname_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Class user is associated with
+       * </pre>
+       *
+       * <code>optional string classname = 25;</code>
+       */
+      public Builder setClassname(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000800;
+        classname_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Class user is associated with
+       * </pre>
+       *
+       * <code>optional string classname = 25;</code>
+       */
+      public Builder clearClassname() {
+        bitField0_ = (bitField0_ & ~0x00000800);
+        classname_ = getDefaultInstance().getClassname();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Class user is associated with
+       * </pre>
+       *
+       * <code>optional string classname = 25;</code>
+       */
+      public Builder setClassnameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000800;
+        classname_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object vendorid_ = "";
+      /**
+       * <pre>
+       * Vendor ID for Anonymous Alexa Accounts
+       * </pre>
+       *
+       * <code>optional string vendorid = 26;</code>
+       */
+      public boolean hasVendorid() {
+        return ((bitField0_ & 0x00001000) == 0x00001000);
+      }
+      /**
+       * <pre>
+       * Vendor ID for Anonymous Alexa Accounts
+       * </pre>
+       *
+       * <code>optional string vendorid = 26;</code>
+       */
+      public java.lang.String getVendorid() {
+        java.lang.Object ref = vendorid_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            vendorid_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Vendor ID for Anonymous Alexa Accounts
+       * </pre>
+       *
+       * <code>optional string vendorid = 26;</code>
+       */
+      public com.google.protobuf.ByteString
+          getVendoridBytes() {
+        java.lang.Object ref = vendorid_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          vendorid_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Vendor ID for Anonymous Alexa Accounts
+       * </pre>
+       *
+       * <code>optional string vendorid = 26;</code>
+       */
+      public Builder setVendorid(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00001000;
+        vendorid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Vendor ID for Anonymous Alexa Accounts
+       * </pre>
+       *
+       * <code>optional string vendorid = 26;</code>
+       */
+      public Builder clearVendorid() {
+        bitField0_ = (bitField0_ & ~0x00001000);
+        vendorid_ = getDefaultInstance().getVendorid();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Vendor ID for Anonymous Alexa Accounts
+       * </pre>
+       *
+       * <code>optional string vendorid = 26;</code>
+       */
+      public Builder setVendoridBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00001000;
+        vendorid_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object refreshtoken_ = "";
+      /**
+       * <pre>
+       * Refresh Token for Anonymous Alexa Account
+       * </pre>
+       *
+       * <code>optional string refreshtoken = 27;</code>
+       */
+      public boolean hasRefreshtoken() {
+        return ((bitField0_ & 0x00002000) == 0x00002000);
+      }
+      /**
+       * <pre>
+       * Refresh Token for Anonymous Alexa Account
+       * </pre>
+       *
+       * <code>optional string refreshtoken = 27;</code>
+       */
+      public java.lang.String getRefreshtoken() {
+        java.lang.Object ref = refreshtoken_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            refreshtoken_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Refresh Token for Anonymous Alexa Account
+       * </pre>
+       *
+       * <code>optional string refreshtoken = 27;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRefreshtokenBytes() {
+        java.lang.Object ref = refreshtoken_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          refreshtoken_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * Refresh Token for Anonymous Alexa Account
+       * </pre>
+       *
+       * <code>optional string refreshtoken = 27;</code>
+       */
+      public Builder setRefreshtoken(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00002000;
+        refreshtoken_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Refresh Token for Anonymous Alexa Account
+       * </pre>
+       *
+       * <code>optional string refreshtoken = 27;</code>
+       */
+      public Builder clearRefreshtoken() {
+        bitField0_ = (bitField0_ & ~0x00002000);
+        refreshtoken_ = getDefaultInstance().getRefreshtoken();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Refresh Token for Anonymous Alexa Account
+       * </pre>
+       *
+       * <code>optional string refreshtoken = 27;</code>
+       */
+      public Builder setRefreshtokenBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00002000;
+        refreshtoken_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -2361,18 +3000,20 @@ public final class TokenProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013token.proto\022\006tokens\"\214\003\n\005token\022*\n\007comma" +
+      "\n\013token.proto\022\006tokens\"\307\003\n\005token\022*\n\007comma" +
       "nd\030\001 \002(\0162\031.tokens.token.CommandType\022\n\n\002t" +
       "s\030\002 \001(\004\022\014\n\004uuid\030\003 \001(\t\022\021\n\tprojectid\030\004 \001(\004" +
       "\022\014\n\004name\030\005 \001(\t\022\024\n\014oneProjectId\030\006 \001(\004\022\020\n\010" +
       "readOnly\030\024 \001(\010\022\017\n\007duedate\030\025 \001(\004\022\032\n\022displ" +
       "ayprojectname\030\026 \001(\t\022\032\n\022displayaccountnam" +
-      "e\030\027 \001(\t\022\022\n\nbackpackid\030\030 \001(\t\"\226\001\n\013CommandT" +
-      "ype\022\014\n\010SSOLOGIN\020\000\022\017\n\013SHOWPROJECT\020\001\022\021\n\rCR" +
-      "EATEACCOUNT\020\002\022\021\n\rCREATEPROJECT\020\003\022\n\n\006LOGO" +
-      "UT\020\004\022\r\n\tSSOLOGIN2\020\005\022\r\n\tFETCHUUID\020\006\022\016\n\nUU",
-      "IDRETURN\020\007\022\010\n\004NOOP\020\024B2\n$com.google.appin" +
-      "ventor.server.tokensB\nTokenProto"
+      "e\030\027 \001(\t\022\022\n\nbackpackid\030\030 \001(\t\022\021\n\tclassname" +
+      "\030\031 \001(\t\022\020\n\010vendorid\030\032 \001(\t\022\024\n\014refreshtoken" +
+      "\030\033 \001(\t\"\226\001\n\013CommandType\022\014\n\010SSOLOGIN\020\000\022\017\n\013" +
+      "SHOWPROJECT\020\001\022\021\n\rCREATEACCOUNT\020\002\022\021\n\rCREA",
+      "TEPROJECT\020\003\022\n\n\006LOGOUT\020\004\022\r\n\tSSOLOGIN2\020\005\022\r" +
+      "\n\tFETCHUUID\020\006\022\016\n\nUUIDRETURN\020\007\022\010\n\004NOOP\020\024B" +
+      "2\n$com.google.appinventor.server.tokensB" +
+      "\nTokenProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2391,7 +3032,7 @@ public final class TokenProto {
     internal_static_tokens_token_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tokens_token_descriptor,
-        new java.lang.String[] { "Command", "Ts", "Uuid", "Projectid", "Name", "OneProjectId", "ReadOnly", "Duedate", "Displayprojectname", "Displayaccountname", "Backpackid", });
+        new java.lang.String[] { "Command", "Ts", "Uuid", "Projectid", "Name", "OneProjectId", "ReadOnly", "Duedate", "Displayprojectname", "Displayaccountname", "Backpackid", "Classname", "Vendorid", "Refreshtoken", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

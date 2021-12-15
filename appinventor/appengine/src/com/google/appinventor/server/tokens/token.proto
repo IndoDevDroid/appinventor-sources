@@ -34,6 +34,9 @@ message token {
                                               // accounts created by the HK portal have "ugly" account
                                               // names, so they provide something "better" to display instead
   optional string backpackid = 24;            // uuid of shared backpack, if present
+  optional string classname = 25;             // Class user is associated with
+  optional string vendorid = 26;              // Vendor ID for Anonymous Alexa Accounts
+  optional string refreshtoken = 27;          // Refresh Token for Anonymous Alexa Account
 }
 
 
