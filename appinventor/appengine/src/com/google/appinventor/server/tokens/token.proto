@@ -14,6 +14,12 @@ message token {
     FETCHUUID = 6;                            // RestServlet, get UID from email
     UUIDRETURN = 7;                           // FETCHUID return token, uuid contains return value
                                               // name contains name from original FETCHUUID
+    SSOLOGIN3 = 8;                            // Yet another way to login, provide both uuid and name
+                                              // (email). Will lookup account by uuid and if it fails
+                                              // by email. If that fails, the account will be created
+                                              // The difference between this use and SSOLOGIN is that
+                                              // SSOLOGIN does not require an name (email) and will never
+                                              // create an account
     NOOP = 20;
   }
 

@@ -540,6 +540,18 @@ public final class TokenProto {
        * name contains name from original FETCHUUID
        * </pre>
        *
+       * <code>SSOLOGIN3 = 8;</code>
+       */
+      SSOLOGIN3(8),
+      /**
+       * <pre>
+       * (email). Will lookup account by uuid and if it fails
+       * by email. If that fails, the account will be created
+       * The difference between this use and SSOLOGIN is that
+       * SSOLOGIN does not require an name (email) and will never
+       * create an account
+       * </pre>
+       *
        * <code>NOOP = 20;</code>
        */
       NOOP(20),
@@ -598,6 +610,18 @@ public final class TokenProto {
        * name contains name from original FETCHUUID
        * </pre>
        *
+       * <code>SSOLOGIN3 = 8;</code>
+       */
+      public static final int SSOLOGIN3_VALUE = 8;
+      /**
+       * <pre>
+       * (email). Will lookup account by uuid and if it fails
+       * by email. If that fails, the account will be created
+       * The difference between this use and SSOLOGIN is that
+       * SSOLOGIN does not require an name (email) and will never
+       * create an account
+       * </pre>
+       *
        * <code>NOOP = 20;</code>
        */
       public static final int NOOP_VALUE = 20;
@@ -625,6 +649,7 @@ public final class TokenProto {
           case 5: return SSOLOGIN2;
           case 6: return FETCHUUID;
           case 7: return UUIDRETURN;
+          case 8: return SSOLOGIN3;
           case 20: return NOOP;
           default: return null;
         }
@@ -3000,7 +3025,7 @@ public final class TokenProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013token.proto\022\006tokens\"\307\003\n\005token\022*\n\007comma" +
+      "\n\013token.proto\022\006tokens\"\326\003\n\005token\022*\n\007comma" +
       "nd\030\001 \002(\0162\031.tokens.token.CommandType\022\n\n\002t" +
       "s\030\002 \001(\004\022\014\n\004uuid\030\003 \001(\t\022\021\n\tprojectid\030\004 \001(\004" +
       "\022\014\n\004name\030\005 \001(\t\022\024\n\014oneProjectId\030\006 \001(\004\022\020\n\010" +
@@ -3008,12 +3033,12 @@ public final class TokenProto {
       "ayprojectname\030\026 \001(\t\022\032\n\022displayaccountnam" +
       "e\030\027 \001(\t\022\022\n\nbackpackid\030\030 \001(\t\022\021\n\tclassname" +
       "\030\031 \001(\t\022\020\n\010vendorid\030\032 \001(\t\022\024\n\014refreshtoken" +
-      "\030\033 \001(\t\"\226\001\n\013CommandType\022\014\n\010SSOLOGIN\020\000\022\017\n\013" +
+      "\030\033 \001(\t\"\245\001\n\013CommandType\022\014\n\010SSOLOGIN\020\000\022\017\n\013" +
       "SHOWPROJECT\020\001\022\021\n\rCREATEACCOUNT\020\002\022\021\n\rCREA",
       "TEPROJECT\020\003\022\n\n\006LOGOUT\020\004\022\r\n\tSSOLOGIN2\020\005\022\r" +
-      "\n\tFETCHUUID\020\006\022\016\n\nUUIDRETURN\020\007\022\010\n\004NOOP\020\024B" +
-      "2\n$com.google.appinventor.server.tokensB" +
-      "\nTokenProto"
+      "\n\tFETCHUUID\020\006\022\016\n\nUUIDRETURN\020\007\022\r\n\tSSOLOGI" +
+      "N3\020\010\022\010\n\004NOOP\020\024B2\n$com.google.appinventor" +
+      ".server.tokensB\nTokenProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -268,7 +268,8 @@ public class LoginServlet extends HttpServlet {
       // At this point we have a valid token, so use it to login!
       // need to make sure it is a SSOLOGIN token
       if (token.getCommand() != TokenProto.token.CommandType.SSOLOGIN &&
-        token.getCommand() != TokenProto.token.CommandType.SSOLOGIN2) {
+        token.getCommand() != TokenProto.token.CommandType.SSOLOGIN2 &&
+        token.getCommand() != TokenProto.token.CommandType.SSOLOGIN3) {
         fail(req, resp, "Token Valid, but not a SSOLOGIN token.", locale);
         return;
       }
@@ -285,13 +286,22 @@ public class LoginServlet extends HttpServlet {
       if (token.getCommand() == TokenProto.token.CommandType.SSOLOGIN) {
         userInfo.setReadOnly(token.getReadOnly());
         userInfo.setUserId(token.getUuid());
-      } else { // SSOLOGIN2
+      } else if (token.getCommand() == TokenProto.token.CommandType.SSOLOGIN2) { // SSOLOGIN2
         String email = token.getName();
         if (email == null || email.isEmpty()) {
           fail(req, resp, "Failed to provide an Email Address for login.", locale);
           return;
         }
         User user = storageIo.getUserFromEmail(email);
+        userInfo.setUserId(user.getUserId());
+      } else {                  // SSOLOGIN3
+        String uuid = token.getUuid();
+        String email = token.getName();
+        if (email == null || email.isEmpty() || uuid == null || uuid.isEmpty()) {
+          fail(req, resp, "Failed to provide email and uuid, shouldn't happen!", locale);
+          return;
+        }
+        User user = storageIo.getUser(uuid, email);
         userInfo.setUserId(user.getUserId());
       }
 
