@@ -317,6 +317,23 @@ public final class TokenProto {
      */
     com.google.protobuf.ByteString
         getRefreshtokenBytes();
+
+    /**
+     * <pre>
+     * Alexa Account is anonymous
+     * </pre>
+     *
+     * <code>optional bool anon = 28;</code>
+     */
+    boolean hasAnon();
+    /**
+     * <pre>
+     * Alexa Account is anonymous
+     * </pre>
+     *
+     * <code>optional bool anon = 28;</code>
+     */
+    boolean getAnon();
   }
   /**
    * Protobuf type {@code tokens.token}
@@ -344,6 +361,7 @@ public final class TokenProto {
       classname_ = "";
       vendorid_ = "";
       refreshtoken_ = "";
+      anon_ = false;
     }
 
     @java.lang.Override
@@ -456,6 +474,11 @@ public final class TokenProto {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00002000;
               refreshtoken_ = bs;
+              break;
+            }
+            case 224: {
+              bitField0_ |= 0x00004000;
+              anon_ = input.readBool();
               break;
             }
           }
@@ -1262,6 +1285,29 @@ public final class TokenProto {
       }
     }
 
+    public static final int ANON_FIELD_NUMBER = 28;
+    private boolean anon_;
+    /**
+     * <pre>
+     * Alexa Account is anonymous
+     * </pre>
+     *
+     * <code>optional bool anon = 28;</code>
+     */
+    public boolean hasAnon() {
+      return ((bitField0_ & 0x00004000) == 0x00004000);
+    }
+    /**
+     * <pre>
+     * Alexa Account is anonymous
+     * </pre>
+     *
+     * <code>optional bool anon = 28;</code>
+     */
+    public boolean getAnon() {
+      return anon_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1320,6 +1366,9 @@ public final class TokenProto {
       if (((bitField0_ & 0x00002000) == 0x00002000)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 27, refreshtoken_);
       }
+      if (((bitField0_ & 0x00004000) == 0x00004000)) {
+        output.writeBool(28, anon_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1375,6 +1424,10 @@ public final class TokenProto {
       }
       if (((bitField0_ & 0x00002000) == 0x00002000)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(27, refreshtoken_);
+      }
+      if (((bitField0_ & 0x00004000) == 0x00004000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(28, anon_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1462,6 +1515,11 @@ public final class TokenProto {
         result = result && getRefreshtoken()
             .equals(other.getRefreshtoken());
       }
+      result = result && (hasAnon() == other.hasAnon());
+      if (hasAnon()) {
+        result = result && (getAnon()
+            == other.getAnon());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1533,6 +1591,11 @@ public final class TokenProto {
       if (hasRefreshtoken()) {
         hash = (37 * hash) + REFRESHTOKEN_FIELD_NUMBER;
         hash = (53 * hash) + getRefreshtoken().hashCode();
+      }
+      if (hasAnon()) {
+        hash = (37 * hash) + ANON_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getAnon());
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1680,6 +1743,8 @@ public final class TokenProto {
         bitField0_ = (bitField0_ & ~0x00001000);
         refreshtoken_ = "";
         bitField0_ = (bitField0_ & ~0x00002000);
+        anon_ = false;
+        bitField0_ = (bitField0_ & ~0x00004000);
         return this;
       }
 
@@ -1760,6 +1825,10 @@ public final class TokenProto {
           to_bitField0_ |= 0x00002000;
         }
         result.refreshtoken_ = refreshtoken_;
+        if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+          to_bitField0_ |= 0x00004000;
+        }
+        result.anon_ = anon_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1859,6 +1928,9 @@ public final class TokenProto {
           bitField0_ |= 0x00002000;
           refreshtoken_ = other.refreshtoken_;
           onChanged();
+        }
+        if (other.hasAnon()) {
+          setAnon(other.getAnon());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2962,6 +3034,54 @@ public final class TokenProto {
         onChanged();
         return this;
       }
+
+      private boolean anon_ ;
+      /**
+       * <pre>
+       * Alexa Account is anonymous
+       * </pre>
+       *
+       * <code>optional bool anon = 28;</code>
+       */
+      public boolean hasAnon() {
+        return ((bitField0_ & 0x00004000) == 0x00004000);
+      }
+      /**
+       * <pre>
+       * Alexa Account is anonymous
+       * </pre>
+       *
+       * <code>optional bool anon = 28;</code>
+       */
+      public boolean getAnon() {
+        return anon_;
+      }
+      /**
+       * <pre>
+       * Alexa Account is anonymous
+       * </pre>
+       *
+       * <code>optional bool anon = 28;</code>
+       */
+      public Builder setAnon(boolean value) {
+        bitField0_ |= 0x00004000;
+        anon_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Alexa Account is anonymous
+       * </pre>
+       *
+       * <code>optional bool anon = 28;</code>
+       */
+      public Builder clearAnon() {
+        bitField0_ = (bitField0_ & ~0x00004000);
+        anon_ = false;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -3025,7 +3145,7 @@ public final class TokenProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013token.proto\022\006tokens\"\326\003\n\005token\022*\n\007comma" +
+      "\n\013token.proto\022\006tokens\"\344\003\n\005token\022*\n\007comma" +
       "nd\030\001 \002(\0162\031.tokens.token.CommandType\022\n\n\002t" +
       "s\030\002 \001(\004\022\014\n\004uuid\030\003 \001(\t\022\021\n\tprojectid\030\004 \001(\004" +
       "\022\014\n\004name\030\005 \001(\t\022\024\n\014oneProjectId\030\006 \001(\004\022\020\n\010" +
@@ -3033,12 +3153,12 @@ public final class TokenProto {
       "ayprojectname\030\026 \001(\t\022\032\n\022displayaccountnam" +
       "e\030\027 \001(\t\022\022\n\nbackpackid\030\030 \001(\t\022\021\n\tclassname" +
       "\030\031 \001(\t\022\020\n\010vendorid\030\032 \001(\t\022\024\n\014refreshtoken" +
-      "\030\033 \001(\t\"\245\001\n\013CommandType\022\014\n\010SSOLOGIN\020\000\022\017\n\013" +
-      "SHOWPROJECT\020\001\022\021\n\rCREATEACCOUNT\020\002\022\021\n\rCREA",
-      "TEPROJECT\020\003\022\n\n\006LOGOUT\020\004\022\r\n\tSSOLOGIN2\020\005\022\r" +
-      "\n\tFETCHUUID\020\006\022\016\n\nUUIDRETURN\020\007\022\r\n\tSSOLOGI" +
-      "N3\020\010\022\010\n\004NOOP\020\024B2\n$com.google.appinventor" +
-      ".server.tokensB\nTokenProto"
+      "\030\033 \001(\t\022\014\n\004anon\030\034 \001(\010\"\245\001\n\013CommandType\022\014\n\010" +
+      "SSOLOGIN\020\000\022\017\n\013SHOWPROJECT\020\001\022\021\n\rCREATEACC",
+      "OUNT\020\002\022\021\n\rCREATEPROJECT\020\003\022\n\n\006LOGOUT\020\004\022\r\n" +
+      "\tSSOLOGIN2\020\005\022\r\n\tFETCHUUID\020\006\022\016\n\nUUIDRETUR" +
+      "N\020\007\022\r\n\tSSOLOGIN3\020\010\022\010\n\004NOOP\020\024B2\n$com.goog" +
+      "le.appinventor.server.tokensB\nTokenProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3057,7 +3177,7 @@ public final class TokenProto {
     internal_static_tokens_token_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tokens_token_descriptor,
-        new java.lang.String[] { "Command", "Ts", "Uuid", "Projectid", "Name", "OneProjectId", "ReadOnly", "Duedate", "Displayprojectname", "Displayaccountname", "Backpackid", "Classname", "Vendorid", "Refreshtoken", });
+        new java.lang.String[] { "Command", "Ts", "Uuid", "Projectid", "Name", "OneProjectId", "ReadOnly", "Duedate", "Displayprojectname", "Displayaccountname", "Backpackid", "Classname", "Vendorid", "Refreshtoken", "Anon", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
