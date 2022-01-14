@@ -1824,7 +1824,10 @@ Blockly.Versioning.AllUpgradeMaps =
     2: "ai1CantDoUpgrade", // Just indicates we couldn't do upgrade even if we wanted to
 
     // RequestFocus was added
-    3: "noUpgrade"
+    3: "noUpgrade",
+
+    // The HintColor property was added
+    4: "noUpgrade"
 
   }, // End EmailPicker upgraders
 
@@ -2048,7 +2051,10 @@ Blockly.Versioning.AllUpgradeMaps =
     // AI2: Add HTMLFormat property
     4: "noUpgrade",
 
-    5: "noUpgrade"
+    5: "noUpgrade",
+
+    // AI2: Click & LongClick events are added.
+    6: "noUpgrade"
 
   }, // End Label upgraders
 
@@ -2266,7 +2272,10 @@ Blockly.Versioning.AllUpgradeMaps =
     5: "noUpgrade",
     // AI2:
     // - Added ...
-    6: "noUpgrade"
+    6: "noUpgrade",
+    // AI2:
+    // - Added HasSeparator, SeparatorColor, SeparatorSize Properties
+    7: "noUpgrade",
 
   }, // End ListView upgraders
 
@@ -2618,7 +2627,10 @@ Blockly.Versioning.AllUpgradeMaps =
     4: "noUpgrade",
 
     // NumbersOnly was added
-    5: "noUpgrade"
+    5: "noUpgrade",
+
+    // The HintColor property was added
+    6: "noUpgrade"
 
   }, // End PasswordTextBox upgraders
 
@@ -2963,7 +2975,10 @@ Blockly.Versioning.AllUpgradeMaps =
     5: "noUpgrade",
 
     // AI3: Added ReadOnly property
-    6: "noUpgrade"
+    6: "noUpgrade",
+
+    // The HintColor property was added
+    7: "noUpgrade"
 
   }, // End TextBox upgraders
 

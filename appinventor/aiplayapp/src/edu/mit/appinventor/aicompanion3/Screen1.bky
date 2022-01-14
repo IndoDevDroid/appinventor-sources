@@ -90,7 +90,7 @@
                 <field name="COMPONENT_SELECTOR">Web1</field>
                 <value name="ARG0">
                   <block type="lists_create_with" id="17" inline="false">
-                    <mutation items="9"></mutation>
+                    <mutation items="10"></mutation>
                     <value name="ADD0">
                       <block type="lists_create_with" id="18" inline="false">
                         <mutation items="2"></mutation>
@@ -232,6 +232,21 @@
                         </value>
                         <value name="ADD1">
                           <block type="logic_boolean" id="{H$VZh}SskYpnmxy(Agi">
+                            <field name="BOOL">TRUE</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="ADD9">
+                      <block type="lists_create_with" id="2]Ux?O*E_Miw@u*]*vHD">
+                        <mutation items="2"></mutation>
+                        <value name="ADD0">
+                          <block type="text" id="vI1Pd],RfsRTa8pTuKky">
+                            <field name="TEXT">useproxy</field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="logic_boolean" id=";zEGHb?#[(hs6#)d~|q0">
                             <field name="BOOL">TRUE</field>
                           </block>
                         </value>
@@ -438,6 +453,7 @@
     <field name="VAR0">input</field>
     <value name="RETURN">
       <block type="logic_or" id="?]t/mFK^K=,Isjx^C]-M">
+        <mutation items="2"></mutation>
         <field name="OP">OR</field>
         <value name="A">
           <block type="math_compare" id="56">
@@ -490,7 +506,7 @@
       </block>
     </value>
   </block>
-  <block type="component_event" id="61" x="0" y="1965">
+  <block type="component_event" id="61" x="-2" y="1965">
     <mutation component_type="Notifier" is_generic="false" instance_name="Notifier1" event_name="AfterChoosing"></mutation>
     <field name="COMPONENT_SELECTOR">Notifier1</field>
     <statement name="DO">
@@ -651,6 +667,8 @@
       <block type="controls_choose" id="80" inline="false">
         <value name="TEST">
           <block type="text_contains" id="81">
+            <mutation mode="CONTAINS"></mutation>
+            <field name="OP">CONTAINS</field>
             <value name="TEXT">
               <block type="lexical_variable_get" id="82">
                 <field name="VAR">code</field>
@@ -1144,5 +1162,5 @@
       </block>
     </value>
   </block>
-  <yacodeblocks ya-version="204" language-version="30"></yacodeblocks>
+  <yacodeblocks ya-version="213" language-version="34"></yacodeblocks>
 </xml>

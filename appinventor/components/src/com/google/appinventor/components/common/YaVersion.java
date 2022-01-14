@@ -861,7 +861,9 @@ public class YaVersion {
   // - The Alignment property was renamed to TextAlignment.
   // For EMAILPICKER_COMPONENT_VERSION 3:
   // - RequestFocus function was added (via TextBoxBase)
-  public static final int EMAILPICKER_COMPONENT_VERSION = 3;
+  // For EMAILPICKER_COMPONENT_VERSION 4:
+  // - The HintColor property was added
+  public static final int EMAILPICKER_COMPONENT_VERSION = 4;
 
   // For FEATURE_COLLECTION_COMPONENT_VERSION 1:
   // - Initial FeatureCollection implementation for Maps
@@ -1038,8 +1040,10 @@ public class YaVersion {
   // - The HTML format is defined.
   // For LABEL_COMPONENT_VERSION 5:
   // - The HTMLContent property is defined.
+  // For LABEL_COMPONENT_VERSION 6:
+  // - The Click & LongClick events are added.
 
-  public static final int LABEL_COMPONENT_VERSION = 5;
+  public static final int LABEL_COMPONENT_VERSION = 6;
 
   // For LINESTRING_COMPONENT_VERSION 1:
   // - Initial LineString implementation for Maps
@@ -1079,7 +1083,9 @@ public class YaVersion {
   // - Added SelectionColor Property
   // For LISTVIEW_COMPONENT_VERSION 6:
   // - Added ...
-  public static final int LISTVIEW_COMPONENT_VERSION = 6;
+  // For LISTVIEW_COMPONENT_VERSION 7:
+  // - Added HasSeparator, SeparatorColor, SeparatorSize Properties
+  public static final int LISTVIEW_COMPONENT_VERSION = 7;
 
   // For LOCATIONSENSOR_COMPONENT_VERSION 2:
   // - The TimeInterval and DistanceInterval properties were added.
@@ -1189,9 +1195,11 @@ public class YaVersion {
   // - Added RequestFocus Function (via TextBoxBase)
   // For PASSWORDTEXTBOX_COMPONENT_VERSION 4:
   // - Added PasswordVisible property
-  // For For PASSWORDTEXTBOX_COMPONENT_VERSION 5:
+  // For PASSWORDTEXTBOX_COMPONENT_VERSION 5:
   // - Added NumbersOnly property
-  public static final int PASSWORDTEXTBOX_COMPONENT_VERSION = 5;
+  // For PASSWORDTEXTBOX_COMPONENT_VERSION 6:
+  // - The HintColor property was added
+  public static final int PASSWORDTEXTBOX_COMPONENT_VERSION = 6;
 
   // For PEDOMETER_COMPONENT_VERSION 2:
   // - The step sensing algorithm was updated to be more accurate.
@@ -1298,7 +1306,9 @@ public class YaVersion {
   // - RequestFocus method was added
   // For TEXTBOX_COMPONENT_VERSION 6:
   // - ReadOnly property was added
-  public static final int TEXTBOX_COMPONENT_VERSION = 6;
+  // For TEXTBOX_COMPONENT_VERSION 7:
+  // - The HintColor property was added
+  public static final int TEXTBOX_COMPONENT_VERSION = 7;
 
   // For TEXTING_COMPONENT_VERSION 2:
   // Texting over Wifi was implemented using Google Voice
