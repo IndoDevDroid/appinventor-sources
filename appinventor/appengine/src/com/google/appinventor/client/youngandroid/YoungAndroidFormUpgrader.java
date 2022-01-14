@@ -876,6 +876,10 @@ public final class YoungAndroidFormUpgrader {
       // RequestFocus function was added (via TextBoxBase)
       srcCompVersion = 3;
     }
+    if (srcCompVersion < 4) {
+      // The HintColor property was added
+      srcCompVersion = 4;
+    }
     return srcCompVersion;
   }
 
@@ -1287,6 +1291,11 @@ public final class YoungAndroidFormUpgrader {
     if (srcCompVersion < 5) {
       srcCompVersion = 5;
     }
+    if (srcCompVersion < 6) {
+      // The Click & LongClick events are added.
+      componentProperties.put("Clickable", new ClientJsonString("False"));
+      srcCompVersion = 6;
+    }
     return srcCompVersion;
   }
 
@@ -1355,6 +1364,10 @@ public final class YoungAndroidFormUpgrader {
       // Added ...
       srcCompVersion = 6;
     }
+    if (srcCompVersion < 7) {
+      // - Added HasSeparator, SeparatorColor, SeparatorSize Properties
+      srcCompVersion = 7;
+    }
     return srcCompVersion;
   }
 
@@ -1401,6 +1414,10 @@ public final class YoungAndroidFormUpgrader {
     if (srcCompVersion < 5) {
       // Added NumbersOnly property
       srcCompVersion = 5;
+    }
+    if (srcCompVersion < 6) {
+      // The HintColor property was added
+      srcCompVersion = 6;
     }
     return srcCompVersion;
   }
@@ -1732,6 +1749,10 @@ public final class YoungAndroidFormUpgrader {
     if (srcCompVersion < 6) {
       // ReadOnly property was added
       srcCompVersion = 6;
+    }
+    if (srcCompVersion < 7) {
+      // The HintColor property was added
+      srcCompVersion = 7;
     }
     return srcCompVersion;
   }

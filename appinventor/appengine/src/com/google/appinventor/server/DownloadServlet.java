@@ -19,10 +19,14 @@ import com.google.appinventor.shared.storage.StorageUtil;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -96,14 +100,17 @@ public class DownloadServlet extends OdeServlet {
     CACHE_HEADERS.setNotCacheable(resp);
     resp.setContentType(CONTENT_TYPE);
 
-    RawFile downloadableFile;
+    RawFile downloadableFile = null;
 
     String userId = null;
+
+    int status_code=HttpServletResponse.SC_OK;
 
     try {
       String uri = req.getRequestURI();
       // First, call split with no limit parameter.
       String[] uriComponents = uri.split("/");
+      System.out.println(Arrays.toString(uriComponents));
       String downloadKind = uriComponents[DOWNLOAD_KIND_INDEX];
 
       userId = userInfoProvider.getUserId();
@@ -205,12 +212,25 @@ public class DownloadServlet extends OdeServlet {
 
       } else if (downloadKind.equals(ServerLayout.DOWNLOAD_FILE)) {
         // Download a specific file.
+        // compute the hash and check if the hash matches the header coming in
+        // (HttpServerRequest req has the header)
         uriComponents = uri.split("/", SPLIT_LIMIT_FILE);
         long projectId = Long.parseLong(uriComponents[PROJECT_ID_INDEX]);
         String filePath = (uriComponents.length > FILE_PATH_INDEX) ?
-            uriComponents[FILE_PATH_INDEX] : null;
+                uriComponents[FILE_PATH_INDEX] : null;
+        StorageIoInstanceHolder.getInstance().assertUserHasProject(userId, projectId);
         downloadableFile = fileExporter.exportFile(userId, projectId, filePath);
+        byte[] fileContent = downloadableFile.getContent();
 
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        String fileHash = byteArray2Hex(md.digest(fileContent));
+        // if equal, return 304
+        if (fileHash.equals(req.getHeader("If-None-Match"))) {
+          status_code = HttpServletResponse.SC_NOT_MODIFIED;
+        } else {
+          uriComponents = uri.split("/", SPLIT_LIMIT_FILE);
+        }
+        resp.setHeader("ETag", fileHash);
       } else if (downloadKind.equals(ServerLayout.DOWNLOAD_USERFILE)) {
         // Download a specific user file, such as android.keystore
         uriComponents = uri.split("/", SPLIT_LIMIT_USERFILE);
@@ -237,13 +257,15 @@ public class DownloadServlet extends OdeServlet {
       out.write(message.getBytes());
       out.close();
       return;
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
     }
 
     String fileName = downloadableFile.getFileName();
     byte[] content = downloadableFile.getContent();
 
     // Set http response information
-    resp.setStatus(HttpServletResponse.SC_OK);
+    resp.setStatus(status_code);
     resp.setHeader(
         "content-disposition",
         req.getParameter("inline") != null ? "inline" : "attachment" + "; filename=\"" + fileName + "\"");
@@ -254,5 +276,13 @@ public class DownloadServlet extends OdeServlet {
     ServletOutputStream out = resp.getOutputStream();
     out.write(content);
     out.close();
+  }
+
+  private static String byteArray2Hex(final byte[] hash) {
+    Formatter formatter = new Formatter();
+    for (byte b : hash) {
+      formatter.format("%02x", b);
+    }
+    return formatter.toString();
   }
 }
