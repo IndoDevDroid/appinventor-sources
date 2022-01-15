@@ -387,4 +387,12 @@ public abstract class CommonProjectService {
       }
     }
   }
+
+  public long renameFile(String userId, long projectId, String oldFileId, String newFileId) {
+    storageIo.addSourceFilesToProject(userId, projectId, false, newFileId);
+    byte[] content = storageIo.downloadRawFile(userId, projectId, oldFileId);
+    long modDate = storageIo.uploadRawFileForce(projectId, newFileId, userId, content);
+    storageIo.removeSourceFilesFromProject(userId, projectId, true, oldFileId);
+    return modDate;
+  }
 }

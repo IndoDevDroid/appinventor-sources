@@ -18,15 +18,17 @@ import java.io.IOException;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
 
 /**
  * AssetFetcher: This module is used by the MIT AI2 Companion to fetch
@@ -43,11 +45,14 @@ import org.json.JSONException;
  *               Companion that we have all of the needed assets
  *
  *               This code is part of the implementation of webRTC
- *               communication between the Companion and the App
+ *               co mmunication between the Companion and the App
  *               Inventor client.
  */
 
 public class AssetFetcher {
+
+  private static Context context = ReplForm.getActiveForm();
+  private static HashDatabase db = new HashDatabase(context);
 
   private static final String LOG_TAG = AssetFetcher.class.getSimpleName();
 
@@ -69,6 +74,7 @@ public class AssetFetcher {
           String fileName = uri + "/ode/download/file/" + projectId + "/" + asset;
           if (getFile(fileName, cookieValue, asset, 0) != null) {
             RetValManager.assetTransferred(asset);
+
           }
         }
       });
@@ -142,11 +148,11 @@ public class AssetFetcher {
         } else {
           inError = true;
           form.runOnUiThread(new Runnable() {
-              public void run() {
-                RuntimeErrorAlert.alert(Form.getActiveForm(), "Unable to load file: " + fileName,
-                  "Error!", "End Application");
-              }
-            });
+            public void run() {
+              RuntimeErrorAlert.alert(Form.getActiveForm(), "Unable to load file: " + fileName,
+                      "Error!", "End Application");
+            }
+          });
           return null;
         }
       }
@@ -159,11 +165,33 @@ public class AssetFetcher {
       if (connection != null) {
         connection.setRequestMethod("GET");
         connection.addRequestProperty("Cookie",  "AppInventor = " + cookieValue);
+        if(db.getHashFile(fileName) == null) {
+          connection.addRequestProperty("If-None-Match", null);
+        } else {
+          connection.addRequestProperty("If-None-Match", db.getHashFile(fileName).getHash()); //get old_hash from database
+        }
         int responseCode = connection.getResponseCode();
         Log.d(LOG_TAG, "asset = " + asset + " responseCode = " + responseCode);
         outFile = new File(QUtil.getReplAssetPath(form, true), asset.substring("assets/".length()));
         Log.d(LOG_TAG, "target file = " + outFile);
         File parentOutFile = outFile.getParentFile();
+
+        if (responseCode == 200) {
+          String fileHash = connection.getHeaderField("ETag"); //only save when status code is 200
+          Date timeStamp = new Date();
+          HashFile file = new HashFile(fileName,fileHash,timeStamp);
+          if (db.getHashFile(fileName) == null){
+            db.insertHashFile(file);
+          }else{
+            db.updateHashFile(file);
+          }
+        }
+        else if (responseCode == 304){
+          return outFile;
+        }
+        //connection.set()
+        //timestamp, response code
+
         if (!parentOutFile.exists() && !parentOutFile.mkdirs()) {
           throw new IOException("Unable to create assets directory " + parentOutFile);
         }
@@ -198,4 +226,13 @@ public class AssetFetcher {
       return getFile(fileName, cookieValue, asset, depth + 1);
     }
   }
+  private static String byteArray2Hex(final byte[] hash) {
+    Formatter formatter = new Formatter();
+    for (byte b : hash) {
+      formatter.format("%02x", b);
+    }
+    return formatter.toString();
+  }
 }
+
+
